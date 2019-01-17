@@ -3,10 +3,10 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const uuid = require('uuid');
 const SINGLE_USE_TOKENS = !!process.env.SINGLE_USE_TOKENS;
 const TOKEN_EXPIRE = process.env.TOKEN_LIFETIME || '5m';
-const SECRET = process.env.SECRET || 'foobar';
+let SECRET = 'seceret';
 
 const usedTokens = new Set();
 
@@ -15,6 +15,7 @@ const users = new mongoose.Schema({
   password: {type:String, required:true},
   email: {type: String},
   role: {type: String, default:'user', enum: ['admin','editor','user']},
+  // secret: {type: String, default:'defaultsecret'},
 });
 
 users.pre('save', function(next) {
@@ -52,6 +53,12 @@ users.statics.authenticateBasic = function(auth) {
     .catch(error => {throw error;});
 };
 
+users.statics.authenticateToken = function(token) {
+  let parsedToken = jwt.verify(token, SECRET)
+  let query = {_id:parsedToken.id};
+  return this.findOne(query);
+}
+
 users.methods.comparePassword = function(password) {
   return bcrypt.compare( password, this.password )
     .then( valid => valid ? this : null);
@@ -64,12 +71,14 @@ users.methods.generateToken = function(type) {
     role: this.role,
     type: type || 'user',
   };
-  
+
+  // db.users.update({username:"El Jaredito"},{$set:{password:"defaultword"}})
+  // this.update({username:this.username},{$set:{secret:`${newSECRET}`}});
   return jwt.sign(token, SECRET);
 };
 
-users.methods.generateKey = function() {
-  return this.generateToken('key');
-};
+// users.methods.generateKey = function() {
+//   return this.generateToken('key');
+// };
 
 module.exports = mongoose.model('users', users);
