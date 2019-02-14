@@ -7,7 +7,7 @@
 
 ### Links and Resources
 * [repo](https://github.com/jaredpattison/18-authorization)
-* [travis](http://xyz.com)
+* [travis](https://travis-ci.com/jaredpattison/18-authorization)
 * [back-end](https://jared-auth-server.herokuapp.com/)
 
 
