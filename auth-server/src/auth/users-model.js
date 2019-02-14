@@ -3,10 +3,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const uuid = require('uuid');
 const SINGLE_USE_TOKENS = !!process.env.SINGLE_USE_TOKENS;
 const TOKEN_EXPIRE = process.env.TOKEN_LIFETIME || '5m';
-let SECRET = 'seceret';
+let SECRET = process.env.SECRET || 'supersecret';
 
 const usedTokens = new Set();
 
@@ -54,10 +53,18 @@ users.statics.authenticateBasic = function(auth) {
 };
 
 users.statics.authenticateToken = function(token) {
-  let parsedToken = jwt.verify(token, SECRET)
+  if(usedTokens.has(token)) {
+    return Promise.reject('Invalid Token');
+  }
+
+  try {
+  let parsedToken = jwt.verify(token, SECRET);
+  (SINGLE_USE_TOKENS) && parsedToken.type !== 'key' && usedTokens.add(token);
   let query = {_id:parsedToken.id};
   return this.findOne(query);
-}
+  } catch(e) { throw new Error('Invalid Token');}
+};
+
 
 users.methods.comparePassword = function(password) {
   return bcrypt.compare( password, this.password )
@@ -72,13 +79,16 @@ users.methods.generateToken = function(type) {
     type: type || 'user',
   };
 
-  // db.users.update({username:"El Jaredito"},{$set:{password:"defaultword"}})
-  // this.update({username:this.username},{$set:{secret:`${newSECRET}`}});
-  return jwt.sign(token, SECRET);
+  let options = {};
+  if(type !== 'key' && !! TOKEN_EXPIRE) {
+    options = { expiresIn: TOKEN_EXPIRE};
+  }
+
+  return jwt.sign(token, SECRET, options);
 };
 
-// users.methods.generateKey = function() {
-//   return this.generateToken('key');
-// };
+users.methods.generateKey = function() {
+  return this.generateToken('key');
+};
 
 module.exports = mongoose.model('users', users);

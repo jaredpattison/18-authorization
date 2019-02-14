@@ -1,19 +1,15 @@
 ![CF](http://i.imgur.com/7v5ASc8.png) LAB
 =================================================
 
-## Authorization
+## Auth-Server
 
 ### Author: Jared
 
 ### Links and Resources
 * [repo](https://github.com/jaredpattison/18-authorization)
 * [travis](http://xyz.com)
-* [back-end](http://xyz.com) (when applicable)
-* [front-end](http://xyz.com) (when applicable)
+* [back-end](https://jared-auth-server.herokuapp.com/)
 
-#### Documentation
-* [swagger](http://xyz.com) (API assignments only)
-* [jsdoc](http://xyz.com) (All assignments)
 
 ### Modules
 #### `modulename.js`
@@ -27,8 +23,8 @@ Usage Notes or examples
 
 ### Setup
 #### `.env` requirements
-* `PORT` - Port Number
-* `MONGODB_URI` - URL to the running mongo instance/db
+* `PORT` - 3000
+* `PORT` - connects to Q server on 3333
 
 #### Running the app
 * `npm start`
@@ -36,11 +32,11 @@ Usage Notes or examples
   * Returns a JSON object with abc in it.
 * Endpoint: `/bing/zing/`
   * Returns a JSON object with xyz in it.
-  
+
 #### Tests
 * How do you run tests?
 * What assertions were made?
 * What assertions need to be / should be made?
 
 #### UML
-![image][./assets/auth.jpg]
+Link to an image of the UML for your application and response to events

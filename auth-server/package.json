@@ -1,7 +1,6 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -31,5 +30,7 @@
     "supertest": "^3.3.0",
     "swagger-ui-express": "^4.0.2",
     "uuid": "^3.3.2"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }
